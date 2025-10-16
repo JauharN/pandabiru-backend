@@ -34,6 +34,21 @@ Route::get('/v1/reports/summary', [ReportController::class, 'summary'])->middlew
 Route::middleware('auth:sanctum')->group(function () {
     // Master data
     Route::get('/v1/stores', fn() => Store::all());
+
+    Route::get('/v1/stores/{id}', function ($id) {
+    $store = Store::find($id);
+    if (!$store) {
+        return response()->json(['message' => 'Store not found'], 404);
+    }
+    return response()->json($store);
+    });
+
+    Route::get('/v1/stores/code/{code}', function ($code) {
+    $store = Store::where('code', $code)->first();
+    if (!$store) return response()->json(['message' => 'Store not found'], 404);
+    return response()->json($store);
+    });
+
     Route::get('/v1/products', fn() => Product::all());
 
     // Report endpoints
